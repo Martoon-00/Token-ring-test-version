@@ -7,10 +7,10 @@ package layer.communication;
  * <p>
  * * Message delivery is guaranteed
  * <p>
- * * Previous one is achieved via cutting dead nodes from out subnet. Also we periodically send requests to other
+ * * Previous one is achieved via cutting dead nodes from our subnet. Also we periodically send requests to other
  * available subnets for merging.
  * <p>
- * * If current subnet consists of a just our node, sending blocks thread until subnet expanding.
+ * * If current subnet consists of a just our node, sending blocks thread until subnet expands.
  * <p>
  * * Subnet map is known and used only by this layer
  */
@@ -25,9 +25,8 @@ public class Communicator {
      */
     public void talkWithNext(Dialog dialog) {
         // until success do the following:
-        //     fixate next node
-        //     try to perform dialog with it
-        //     if fail, consider receiver to be dead
+        //     try to perform dialog with next node
+        //     if fails, consider receiver to be dead
         // if no nodes in subnet exists, sleep for some time and check again
     }
 

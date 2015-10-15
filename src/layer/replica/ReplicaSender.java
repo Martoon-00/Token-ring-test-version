@@ -1,7 +1,7 @@
 package layer.replica;
 
-import message.ReplyMessage;
-import message.RequestMessage;
+import layer.replica.message.ReplyMessage;
+import layer.replica.message.RequestMessage;
 
 import java.net.InetSocketAddress;
 
@@ -10,19 +10,21 @@ import java.net.InetSocketAddress;
  */
 public class ReplicaSender {
     /**
-     * Simply sends message through UDP, waits for result during some sensible time.
+     * Simply sends layer.replica.message through UDP, waits for result during some sensible time.
      * <p>
      * Thread is blocked during method call.
      *
-     * @param address receiver of message
+     * @param address receiver of layer.replica.message
      * @param message mail entry
-     * @return response message
+     * @return response layer.replica.message
      * @throws SendingException when timeout exceeded
      */
-    public ReplyMessage send(InetSocketAddress address, RequestMessage message, DispatchType type) throws SendingException {
+    public <T extends ReplyMessage> T send(InetSocketAddress address, RequestMessage<T> message, DispatchType type) throws SendingException {
 
     }
 
+    public void registerReplyProtocol(ReplyProtocol protocol) {
+    }
 
     public enum DispatchType {
         SINGLE, // UDP

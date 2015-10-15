@@ -1,7 +1,7 @@
 package layer.replica;
 
-import message.ReplyMessage;
-import message.RequestMessage;
+import layer.replica.message.ReplyMessage;
+import layer.replica.message.RequestMessage;
 
 import java.net.InetSocketAddress;
 

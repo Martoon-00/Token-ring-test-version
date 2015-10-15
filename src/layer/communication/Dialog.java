@@ -10,7 +10,7 @@ public interface Dialog {
      *
      * @param sender should be used for sending messages. You have no information about receiver address, it's defined
      *               outside
-     * @throws SendingException if some of message sending fails
+     * @throws SendingException if some of layer.replica.message sending fails
      */
     void talk(DirectedSender sender) throws SendingException;
 }
