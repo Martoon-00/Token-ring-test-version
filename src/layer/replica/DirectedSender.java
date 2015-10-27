@@ -6,7 +6,8 @@ import layer.replica.message.RequestMessage;
 @FunctionalInterface
 public interface DirectedSender {
     /**
-     * Sends layer.replica.message, but without opportunity to specify receiver.
+     * Sends message, but without opportunity to specify receiver.
+     * This interface is not complete
      *
      * @see ReplicaSender
      */

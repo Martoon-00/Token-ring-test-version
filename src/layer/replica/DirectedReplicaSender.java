@@ -5,6 +5,9 @@ import layer.replica.message.RequestMessage;
 
 import java.net.InetSocketAddress;
 
+/**
+ * This class is not complete.
+ */
 public class DirectedReplicaSender implements DirectedSender {
     private final ReplicaSender sender;
     private final InetSocketAddress address;
@@ -17,6 +20,6 @@ public class DirectedReplicaSender implements DirectedSender {
     }
 
     public ReplyMessage send(RequestMessage message) throws SendingException {
-        return sender.send(address, message, dispatchType);
+        return sender.sendAndWait(address, message, dispatchType);
     }
 }
