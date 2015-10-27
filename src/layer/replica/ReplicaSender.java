@@ -5,8 +5,9 @@ import layer.replica.message.ReplyMessage;
 import layer.replica.message.RequestMessage;
 
 import java.net.InetSocketAddress;
-import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * API for Replica (lower) layer.
@@ -25,11 +26,20 @@ public class ReplicaSender {
      * @return response message
      * @throws SendingException when timeout exceeded
      */
-    public <T extends ReplyMessage> T sendAndWait(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) throws SendingException {
+    public <T extends ReplyMessage> T sendAndExpect(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) throws SendingException {
+        return sendAndWait(address, message, type, timeout)
+                .orElseThrow(() -> new SendingException(address));
+    }
+
+    /**
+     * Same as <tt>sendAndExpect</tt>, but in case of no answer returns empty Optional instead of than throwing exception
+     */
+    public <T extends ReplyMessage> Optional<T> sendAndWait(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) {
         // IMPLEMENTATION NOTES
         // this can be easily implemented via <tt>send</tt>
 
     }
+
 
     /**
      * Sends a message.
@@ -57,17 +67,27 @@ public class ReplicaSender {
     }
 
     /**
-     * Sends a broadcast, waits for timeout to collect answers.
+     * Sends a broadcast, and returns stream of answers which would be collected during timeout.
      * <p>
      * Node will NOT receive its own request
      * (i.e. response protocols of this sender will ignore any broadcast from itself (or from sender with same address?)).
+     * <p>
+     * Note, that this method doesn't block the thread, but accessing elements of result stream does.
+     * How to use result value: consider this code
+     * Stream<ReplyMessage> replies = broadcastAndWait(..., 5_000);
+     * replies.collect(Collectors.toList())    // waits for 5 seconds and returns list of replies
+     * for (ReplyMessage reply : replies) {}   // processes replies as soon as they arrive
+     * replies.findAny()                       // waits for first message only, but no more than 5 seconds
      *
      * @param message mail entry
      * @param timeout timeout in milliseconds
      * @param <T>     responses type
-     * @return list of replies
+     * @return stream of replies
      */
-    public <T extends ReplyMessage> List<T> broadcastAndWait(RequestMessage<T> message, int timeout) {
+    public <T extends ReplyMessage> Stream<T> broadcastAndWait(RequestMessage<T> message, int timeout) {
+        // IMPLEMENTATION NOTES
+        // about constructing return value:
+        // there is a way to create a custom stream from an iterator
 
     }
 

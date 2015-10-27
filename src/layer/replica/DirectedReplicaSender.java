@@ -20,6 +20,6 @@ public class DirectedReplicaSender implements DirectedSender {
     }
 
     public ReplyMessage send(RequestMessage message) throws SendingException {
-        return sender.sendAndWait(address, message, dispatchType);
+        return sender.sendAndExpect(address, message, dispatchType);
     }
 }
