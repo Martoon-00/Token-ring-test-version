@@ -32,7 +32,7 @@ public class ReplicaSender {
     }
 
     /**
-     * Same as <tt>sendAndExpect</tt>, but in case of no answer returns empty Optional instead of than throwing exception
+     * Same as <tt>sendAndExpect</tt>, but in case of no answer returns empty Optional instead of throwing exception
      */
     public <T extends ReplyMessage> Optional<T> sendAndWait(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) {
         // IMPLEMENTATION NOTES
@@ -72,12 +72,7 @@ public class ReplicaSender {
      * Node will NOT receive its own request
      * (i.e. response protocols of this sender will ignore any broadcast from itself (or from sender with same address?)).
      * <p>
-     * Note, that this method doesn't block the thread, but accessing elements of result stream does.
-     * How to use result value: consider this code
-     * Stream<ReplyMessage> replies = broadcastAndWait(..., 5_000);
-     * replies.collect(Collectors.toList())    // waits for 5 seconds and returns list of replies
-     * for (ReplyMessage reply : replies) {}   // processes replies as soon as they arrive
-     * replies.findAny()                       // waits for first message only, but no more than 5 seconds
+     * Note, that this method doesn't block the thread, but accessing elements of result stream does (in lazy way).
      *
      * @param message mail entry
      * @param timeout timeout in milliseconds
@@ -115,13 +110,9 @@ public class ReplicaSender {
      * Determines behaviour on receiving request-message of specified type.
      * <p>
      * No any two response protocols or response-actions will be executed at the same time.
-     * <p>
-     * Response protocol managing is impossible when not in frozen state. (--optional 1--)
      *
      * @param protocol way on response on specified request-message
      * @return function to unregister from this protocol.
-     * If that function is called when this sender is not in frozen state, it throws IllegalStateException (--optional 1--)
-     * @throws IllegalStateException if not in frozen state (--optional 1--)
      */
     public <Q extends RequestMessage<A>, A extends ReplyMessage> Cancellation registerReplyProtocol(ReplyProtocol<Q, A> protocol) {
 
@@ -132,10 +123,9 @@ public class ReplicaSender {
      * <p>
      * In frozen state no any response protocol is activated, all received request-messages are stored and not processed
      * until unfreezing. So you can safely change response protocols without scaring of missing any request.
-     * Response protocols managing is only available in this state. (--optional 1--)
      * <p>
      * Call of this method also destroys all registered response protocols and response-actions of send- and broadcastAndWait
-     * methods (--optional 2--)
+     * methods (optional feature)
      */
     public void freeze() {
 
