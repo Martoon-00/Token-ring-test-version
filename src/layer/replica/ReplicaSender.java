@@ -112,7 +112,7 @@ public class ReplicaSender {
      * No any two response protocols or response-actions will be executed at the same time.
      *
      * @param protocol way on response on specified request-message
-     * @return function to unregister from this protocol.
+     * @return function to unregister this protocol.
      */
     public <Q extends RequestMessage<A>, A extends ReplyMessage> Cancellation registerReplyProtocol(ReplyProtocol<Q, A> protocol) {
 
