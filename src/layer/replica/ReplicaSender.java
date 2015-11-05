@@ -124,6 +124,8 @@ public class ReplicaSender {
      * In frozen state no any response protocol is activated, all received request-messages are stored and not processed
      * until unfreezing. So you can safely change response protocols without scaring of missing any request.
      * <p>
+     * Sender is initiated in frozen state
+     * <p>
      * Call of this method also destroys all registered response protocols and response-actions of send- and broadcastAndWait
      * methods (optional feature)
      */
