@@ -1,8 +1,7 @@
 package layer.replica;
 
 import layer.replica.message.Cancellation;
-import layer.replica.message.ReplyMessage;
-import layer.replica.message.RequestMessage;
+import layer.replica.message.Message;
 
 import java.net.InetSocketAddress;
 import java.util.Optional;
@@ -22,11 +21,11 @@ public class ReplicaSender {
      * @param message mail entry
      * @param type    way of sending a message: TCP, single UPD...
      * @param timeout timeout in milliseconds
-     * @param <T>     response message type
+     * @param <ReplyType>     response message type
      * @return response message
      * @throws SendingException when timeout exceeded
      */
-    public <T extends ReplyMessage> T sendAndExpect(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) throws SendingException {
+    public <ReplyType extends Message> ReplyType sendAndExpect(InetSocketAddress address, Message<ReplyType> message, DispatchType type, int timeout) throws SendingException {
         return sendAndWait(address, message, type, timeout)
                 .orElseThrow(() -> new SendingException(address));
     }
@@ -34,7 +33,7 @@ public class ReplicaSender {
     /**
      * Same as <tt>sendAndExpect</tt>, but in case of no answer returns empty Optional instead of throwing exception
      */
-    public <T extends ReplyMessage> Optional<T> sendAndWait(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout) {
+    public <ReplyType extends Message> Optional<ReplyType> sendAndWait(InetSocketAddress address, Message<ReplyType> message, DispatchType type, int timeout) {
         // IMPLEMENTATION NOTES
         // this can be easily implemented via <tt>send</tt>
 
@@ -57,11 +56,11 @@ public class ReplicaSender {
      * @param timeout   timeout in milliseconds
      * @param onReceive an action to invoke when got an answer.
      * @param onFail    an action to invoke when timeout exceeded.
-     * @param <T>       response message type
+     * @param <ReplyType>       response message type
      */
-    public <T extends ReplyMessage> void send(InetSocketAddress address, RequestMessage<T> message, DispatchType type, int timeout, Consumer<T> onReceive, Runnable onFail) {
+    public <ReplyType extends Message> void send(InetSocketAddress address, Message<ReplyType> message, DispatchType type, int timeout, Consumer<ReplyType> onReceive, Runnable onFail) {
         // IMPLEMENTATION NOTES
-        // this may greatly help:
+        // this may help:
         // https://github.com/google/guava/wiki/ListenableFutureExplained
 
     }
@@ -76,10 +75,10 @@ public class ReplicaSender {
      *
      * @param message mail entry
      * @param timeout timeout in milliseconds
-     * @param <T>     responses type
+     * @param <ReplyType>     responses type
      * @return stream of replies
      */
-    public <T extends ReplyMessage> Stream<T> broadcastAndWait(RequestMessage<T> message, int timeout) {
+    public <ReplyType extends Message> Stream<ReplyType> broadcastAndWait(Message<ReplyType> message, int timeout) {
         // IMPLEMENTATION NOTES
         // about constructing return value:
         // there is a way to create a custom stream from an iterator
@@ -100,9 +99,9 @@ public class ReplicaSender {
      * @param timeout   timeout in milliseconds
      * @param onReceive is executed when get a response
      * @param onFail    if no answers received
-     * @param <T>       response type
+     * @param <ReplyType>       response type
      */
-    public <T extends ReplyMessage> void broadcast(RequestMessage<T> message, int timeout, Consumer<T> onReceive, Runnable onFail) {
+    public <ReplyType extends Message> void broadcast(Message<ReplyType> message, int timeout, Consumer<ReplyType> onReceive, Runnable onFail) {
 
     }
 
@@ -114,7 +113,7 @@ public class ReplicaSender {
      * @param protocol way on response on specified request-message
      * @return function to unregister this protocol.
      */
-    public <Q extends RequestMessage<A>, A extends ReplyMessage> Cancellation registerReplyProtocol(ReplyProtocol<Q, A> protocol) {
+    public <Q extends Message<A>, A extends Message> Cancellation registerReplyProtocol(ReplyProtocol<Q, A> protocol) {
 
     }
 
